@@ -1,8 +1,8 @@
 # NPA2023 Final Example
 
-- Name/Surname:
-- Student ID:
-- GitHub repository URL:
+- Name/Surname: Methasit prateepmaethakul / Pan
+- Student ID:64070215
+- GitHub repository URL: github.com/llmthpanll/NPA2023-Final-Example
 
 ## Instruction
 
