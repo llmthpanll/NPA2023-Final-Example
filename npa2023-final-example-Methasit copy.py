@@ -18,7 +18,7 @@ import time
 # 2. Assign the Webex hard-coded access token to the variable accessToken.
 
 
-accessToken = "Bearer YTUyOTFkYjYtZTJjMS00NDdlLTk2NTctOThlNDg4OGRiMmZiNTRhNjAzNWQtN2Nm_P0A1_6a2cc597-4b00-40e5-8b6c-999a42f528a5" 
+accessToken = "Bearer NGI4ODUxYjgtZmI2YS00NDkzLTljZWQtMWU0MDU1NGUxY2VlNjlkMjYyNDYtODBm_P0A1_6a2cc597-4b00-40e5-8b6c-999a42f528a5" 
 
 #######################################################################################
 # 3. Prepare GetParameters to get the latest message for messages API.
@@ -45,8 +45,8 @@ while True:
     # - Use the GetParameters to get only the latest message.
     # - Store the message in the "r" variable.
     r = requests.get("https://webexapis.com/v1/messages",
-                         params = GetParameters, 
-                         headers = {"Authorization": accessToken}
+                        params = GetParameters, 
+                        headers = {"Authorization": accessToken}
                     )
     # verify if the retuned HTTP status code is 200/OK
     if not r.status_code == 200:
@@ -70,7 +70,7 @@ while True:
         # extract name of a location (city) where we check for GPS coordinates using the OpenWeather Geocoding API
         # Enter code below to hold city name in location variable.
         # For example location should be "San Jose" if the message is "/chotipat San Jose".
-        location = message[5::] 
+        location = message[5:]
 
 #######################################################################################     
 # 5. Prepare openweather Geocoding APIGetParameters..
@@ -87,8 +87,8 @@ while True:
 #######################################################################################       
 # 6. Provide the URL to the OpenWeather Geocoding address API.
         # Get location information using the OpenWeather Geocoding API geocode service using the HTTP GET method
-        r = requests.get("http://api.openweathermap.org/geo/1.0/", 
-                             params = openweatherGeoAPIGetParameters
+        r = requests.get("http://api.openweathermap.org/geo/1.0/direct", 
+                            params = openweatherGeoAPIGetParameters
                         )
         # Verify if the returned JSON data from the OpenWeather Geocoding API service are OK
         json_data = r.json()
@@ -99,8 +99,8 @@ while True:
 #######################################################################################
 # 7. Provide the OpenWeather Geocoding key values for latitude and longitude.
         # Set the lat and lng key as retuned by the OpenWeather Geocoding API in variables
-        locationLat = json_data[0]["lat"]
-        locationLng = json_data[0]["lon"]
+        locationLat = json_data[0].get("lat")
+        locationLng = json_data[0].get("lon")
 
 #######################################################################################
 # 8. Prepare openweatherAPIGetParameters for OpenWeather API, https://openweathermap.org/api; current weather data for one location by geographic coordinates.
@@ -113,8 +113,8 @@ while True:
 
 #######################################################################################
 # 9. Provide the URL to the OpenWeather API; current weather data for one location.
-        rw = requests.get("https://api.openweathermap.org/data/2.5/", 
-                             params = openweatherAPIGetParameters
+        rw = requests.get("https://api.openweathermap.org/data/2.5/weather", 
+                            params = openweatherAPIGetParameters
                         )
         json_data_weather = rw.json()
 
@@ -123,13 +123,13 @@ while True:
 
 #######################################################################################
 # 10. Complete the code to get weather description and weather temperature
-        weather_desc = json_data_weather[0]["weather"][0]["description"]
-        weather_temp = json_data_weather[0]["main"]["temp"]
+        weather_desc = json_data_weather["weather"][0]["description"]
+        weather_temp = json_data_weather["main"]["temp"]
 
 #######################################################################################
 # 11. Complete the code to format the response message.
         # Example responseMessage result: In Austin, Texas (latitude: 30.264979, longitute: -97.746598), the current weather is clear sky and the temperature is 12.61 degree celsius.
-        responseMessage = "In {} (latitude: {}, longitute: {}), the current weather is {} and the temperature is {} degree celsius.\n".format(location, locationLat, locationLng, weather_desc, weather_temp - 273.15)
+        responseMessage = "In {} (latitude: {}, longitute: {}), the current weather is {} and the temperature is {:.2f} degree celsius.\n".format(location, locationLat, locationLng, weather_desc, weather_temp - 273.15)
         # print("Sending to Webex Teams: " + responseMessage)
 
 #######################################################################################
@@ -147,7 +147,7 @@ while True:
                             "text": responseMessage
                         }
         # Post the call to the Webex Teams message API.
-        r = requests.post( "<!!!REPLACEME with URL!!!>", 
+        r = requests.post( "https://webexapis.com/v1/messages", 
                               data = json.dumps(PostData), 
                               headers = HTTPHeaders
                          )
