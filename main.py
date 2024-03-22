@@ -1,5 +1,6 @@
-txt = "/soijf[osidf] bangkok sdfs"
+message = "/soijf[osidf] bangkok sdfs"
 
-
-print(txt.find(" "))
-print(txt[txt.find(" ")+1::])
+studentID = message[1:message.find(" ")]
+print(studentID)
+print(message.find(" "))
+print(message[message.find(" ")+1::])
